@@ -14,6 +14,11 @@ export const validateRegistration = [
     .withMessage('Password must contain at least one number'),
 ];
 
+export const validateLogin = [
+  body('email').isEmail().withMessage('Must be a valid email address').normalizeEmail(),
+  body('password').notEmpty().withMessage('Password is required'),
+];
+
 export const handleValidationErrors = (req: Request, res: Response, next: NextFunction): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

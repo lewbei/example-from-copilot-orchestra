@@ -3,15 +3,27 @@ import { config } from './config/env';
 import { initializeDatabase } from './config/database';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
+import {
+  securityHeaders,
+  corsMiddleware,
+  generalLimiter,
+  authLimiter,
+} from './middleware/security.middleware';
+import { errorHandler } from './middleware/error.middleware';
 
 export const app = express();
 
-// Middleware
+// Security middleware
+app.use(securityHeaders);
+app.use(corsMiddleware);
+app.use(generalLimiter);
+
+// Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/users', userRoutes);
 
 // Health check endpoint
@@ -29,6 +41,9 @@ app.use((_req: Request, res: Response) => {
     message: 'The requested resource was not found',
   });
 });
+
+// Error handling middleware (must be last)
+app.use(errorHandler);
 
 // Start server only if not in test or if explicitly requested
 let server: ReturnType<typeof app.listen> | undefined;

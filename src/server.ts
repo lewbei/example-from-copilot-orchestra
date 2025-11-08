@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { config } from './config/env';
+import { initializeDatabase } from './config/database';
 
 export const app = express();
 
@@ -24,6 +25,15 @@ app.use((_req: Request, res: Response) => {
 });
 
 // Start server
-export const server = app.listen(config.port, () => {
+export const server = app.listen(config.port, async () => {
   console.log(`Server running on port ${config.port} in ${config.nodeEnv} mode`);
+  
+  // Initialize database in non-test environments
+  if (config.nodeEnv !== 'test') {
+    try {
+      await initializeDatabase();
+    } catch (error) {
+      console.error('Failed to initialize database:', error);
+    }
+  }
 });

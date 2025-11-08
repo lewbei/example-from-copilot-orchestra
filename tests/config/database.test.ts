@@ -24,7 +24,7 @@ describe('Database Connection', () => {
       console.log('Skipping: Database not available');
       return;
     }
-    
+
     const client = await pool.connect();
     expect(client).toBeDefined();
     client.release();
@@ -35,7 +35,7 @@ describe('Database Connection', () => {
       console.log('Skipping: Database not available');
       return;
     }
-    
+
     const result = await pool.query('SELECT NOW()');
     expect(result.rows).toHaveLength(1);
     expect(result.rows[0]).toHaveProperty('now');
@@ -66,7 +66,7 @@ describe('Database Initialization', () => {
       console.log('Skipping: Database not available');
       return;
     }
-    
+
     const result = await pool.query(`
       SELECT column_name, data_type, is_nullable
       FROM information_schema.columns
@@ -75,28 +75,20 @@ describe('Database Initialization', () => {
     `);
 
     expect(result.rows.length).toBeGreaterThan(0);
-    
+
     const columns = result.rows.map((row: any) => ({
       name: row.column_name,
       type: row.data_type,
       nullable: row.is_nullable,
     }));
 
-    expect(columns).toContainEqual(
-      expect.objectContaining({ name: 'id', nullable: 'NO' })
-    );
-    expect(columns).toContainEqual(
-      expect.objectContaining({ name: 'email', nullable: 'NO' })
-    );
+    expect(columns).toContainEqual(expect.objectContaining({ name: 'id', nullable: 'NO' }));
+    expect(columns).toContainEqual(expect.objectContaining({ name: 'email', nullable: 'NO' }));
     expect(columns).toContainEqual(
       expect.objectContaining({ name: 'password_hash', nullable: 'NO' })
     );
-    expect(columns).toContainEqual(
-      expect.objectContaining({ name: 'created_at', nullable: 'NO' })
-    );
-    expect(columns).toContainEqual(
-      expect.objectContaining({ name: 'updated_at', nullable: 'NO' })
-    );
+    expect(columns).toContainEqual(expect.objectContaining({ name: 'created_at', nullable: 'NO' }));
+    expect(columns).toContainEqual(expect.objectContaining({ name: 'updated_at', nullable: 'NO' }));
   });
 
   it('should have unique constraint on email', async () => {
@@ -104,7 +96,7 @@ describe('Database Initialization', () => {
       console.log('Skipping: Database not available');
       return;
     }
-    
+
     const result = await pool.query(`
       SELECT constraint_name, constraint_type
       FROM information_schema.table_constraints

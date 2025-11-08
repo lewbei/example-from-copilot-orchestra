@@ -1,12 +1,8 @@
-import { describe, it, expect, afterAll } from '@jest/globals';
+import { describe, it, expect } from '@jest/globals';
 import request from 'supertest';
-import { app, server } from '../src/server';
+import { app } from '../src/server';
 
 describe('Server', () => {
-  afterAll((done) => {
-    server.close(done);
-  });
-
   it('should respond to health check endpoint', async () => {
     const response = await request(app).get('/health');
 

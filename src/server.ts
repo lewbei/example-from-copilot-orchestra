@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { config } from './config/env';
 import { initializeDatabase } from './config/database';
 import authRoutes from './routes/auth.routes';
+import userRoutes from './routes/user.routes';
 
 export const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 // Health check endpoint
 app.get('/health', (_req: Request, res: Response) => {

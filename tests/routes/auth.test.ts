@@ -96,7 +96,7 @@ describe('Auth Routes', () => {
   describe('POST /api/auth/login', () => {
     beforeAll(async () => {
       if (!dbAvailable) return;
-      
+
       // Create a test user for login tests
       await request(app).post('/api/auth/register').send({
         email: 'loginuser@authtest.com',
